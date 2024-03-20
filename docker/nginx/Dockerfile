@@ -13,4 +13,6 @@ RUN touch /var/run/nginx.pid && \
 
 USER nginx
 
+EXPOSE 8080
+
 CMD ["nginx", "-g", "daemon off;"]
