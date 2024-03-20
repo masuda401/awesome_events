@@ -12,6 +12,8 @@ jobs:
       id-token: write
       contents: read
       actions: read
+    env:
+      IMAGE_TAG: $(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
 
     steps:
       - uses: actions/checkout@v4.1.1
@@ -38,11 +40,11 @@ jobs:
         with:
           file: docker/nginx/Dockerfile
           push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/awesome-events-nginx:$(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
+          tags: ${{ steps.login-ecr.outputs.registry }}/awesome-events-nginx:${{ env.IMAGE_TAG }}
 
       - name: Build app and push image to AWS ECR
         uses: docker/build-push-action@v5
         with:
           file: docker/app/Dockerfile
           push: true
-          tags: ${{ steps.login-ecr.outputs.registry }}/awesome-events-app:$(echo ${{ github.ref }} | sed -e "s#refs/tags/##g")
+          tags: ${{ steps.login-ecr.outputs.registry }}/awesome-events-app:${{ env.IMAGE_TAG }}
